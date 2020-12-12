@@ -6,5 +6,11 @@
 
 #### It was tested on Arch Linux as well as on Manjaro under the desktop environment Cinnamon.
 
+### Installation instructions
+Simply copy the script into e.g. /usr/bin/4kDPI and make it executable with:
+
+    sudo chmod +x /usr/bin/4kDPI
+
+
 #### I hope it is as useful for you as it is for me,
 #### have fun with it.
