@@ -1,0 +1,90 @@
+#!/bin/bash
+
+# 4kDPI scales Qt and GTK applications.
+# By Marc-André Tragé 2020 free 4 all
+
+
+# I wrote this little script because I'm just too lazy to keep copying new BASH scripts,
+# setting them up and making them ready to run, and then checking that everything is OK!
+# It also makes it possible to create a BASH that is ready to run and store it in /user/bin/XYZ, for example.
+
+# It was tested on Arch Linux as well as on Manjaro under the desktop environment Cinnamon.
+
+
+# I hope it is as useful for you as it is for me,
+# have fun with it.
+
+
+   ENV="/usr/bin/env"
+
+normal=$(tput sgr0)
+  bold=$(tput bold)
+
+ fgcol=$(tput setaf 3)
+ fbcol=$(tput setaf 2)
+
+ b1col=$(tput setab 1)
+ bgcol=$(tput setab 18)
+ b2col=$(tput setab 17)
+
+# Automatic output of help in the event of an incorrect entry!
+if [ ! $1 ] || [ ! $2 ] || [ ! $3 ] || [ ! $4 ]
+ then
+    echo ""
+    echo " ${fgcol}${b1col}${bold} 4kDPI is a Qt & GTK DPI Starter for Linux                     ${normal}"
+    echo " ${fgcol}${b1col}${bold} a simple script to set the DPI and SCALE of Qt & GTK GUI's.   ${normal}"
+    echo " ${bgcol} ${normal}${b2col}                                                             ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col} ${bold}4kDPI${normal}${b2col} [${bold}GUI${normal}${b2col}] [${bold}DPI${normal}${b2col}] [${bold}SCALE${normal}${b2col}] [${bold}Program which should be started${normal}${b2col}] ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col}        │     │     │       │                                ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col}        │     ├─ 0  │       └─ Path = /usr/bin/XYZ           ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col}        │     └─ 1  │                                        ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col}        │           ├─ ${bold}1${normal}${b2col}   = normal DPI                      ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col}        ├─ ${bold}Qt${normal}${b2col}  = q  ├─ ${bold}0.5${normal}${b2col} =   half DPI                      ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col}        └─ ${bold}GTK${normal}${b2col} = g  ├─ ${bold}2${normal}${b2col}   = double DPI                      ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col}                    └─ ${bold}4${normal}${b2col}   =   quad DPI                      ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col}                                                             ${bgcol} ${normal}"
+    echo " ${fgcol}${bgcol} ${b2col} ${bold}${b2col}Example:${normal}${fgcol}${b2col} 4kPDI q 0 2 /usr/bin/XYZ                           ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col} ${bold}If you also specify a path and name at the end, e.g.        ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col}                                                             ${bgcol} ${normal}"
+    echo " ${fgcol}${bgcol} ${b2col} ${bold}Example:${normal}${fgcol}${b2col} 4kPDI q 0 2 /usr/bin/XYZ /usr/bin/XYZ-START        ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col} ${bold}a start script is automatically created,                    ${bgcol} ${normal}"
+    echo " ${bgcol} ${normal}${b2col} for this action you will be asked for the ROOT password!    ${bgcol} ${normal}"
+    echo " ${normal}${bgcol}${bold}                                                               ${normal}"
+    echo ""
+    exit 1
+fi
+
+# Qt
+# /usr/bin/env QT_AUTO_SCREEN_SCALE_FACTOR=1 QT_SCALE_FACTOR=1 /usr/bin/XYZ
+if [ $1 = q ]
+  then
+   START=$ENV" QT_AUTO_SCREEN_SCALE_FACTOR="$2" QT_SCALE_FACTOR="$3" "$4
+fi
+
+# GTK
+# /usr/bin/env GDK_DPI_SCALE=2 GDK_SCALE=1 /usr/bin/XYZ
+if [ $1 = g ]
+ then
+   START=$ENV" GDK_DPI_SCALE=2 GDK_SCALE="$2" GDK_SCALE="$3" "$4
+fi
+
+if [ ! $5 ]
+ then
+   $START
+fi
+
+if [ $1 ] && [ $2 ] && [ $3 ] && [ $4 ] && [ $5 ]
+ then
+    echo ""
+    echo "In the following file \""${fgcol}$5${normal}"\" the desired BASH script with this content was created:"
+    echo ${fbcol}
+    echo "#!/bin/bash" | sudo tee $5
+    echo "$START" | sudo tee -a $5
+    echo "exit" | sudo tee -a $5
+    echo ${normal}
+    sudo chmod +x $5
+    echo "You can now call it directly with \""${fgcol}$5${normal}"\"!"
+    echo ""
+    exit 1
+fi
+exit
